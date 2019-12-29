@@ -67,6 +67,7 @@ const braille = new Map([
     ['?', '⠦'],
     ['.', '⠲'],
     [',', '⠂'],
+    ['-', '⠤'],
 ])
 
 const ZERO_WIDTH_NON_JOINER = '‌'
