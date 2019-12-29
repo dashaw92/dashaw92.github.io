@@ -85,7 +85,7 @@ function convert_to_braille(evt) {
     let output = document.querySelector('#output')
 
     output.value = ''
-    input.value.split('').forEach(ch => {
+    rot13(input.value).split('').forEach(ch => {
         if(!braille.has(ch)) braille.set(ch, ch)
 
         output.value += braille.get(ch) + ZERO_WIDTH_NON_JOINER //zero width non joiner acts as a character separator
@@ -107,11 +107,36 @@ function convert_to_alpha(evt) {
     output.value.split(ZERO_WIDTH_NON_JOINER).forEach(ch => {
         for(let key of braille) {
             if(key[1] === ch) {
-                input.value += key[0]
+                input.value += rot13(key[0])
                 return
             }
         }
 
         input.value += ch
     })
+}
+
+//dirty rot13 implementation from an old tool I wrote
+function rot13(ch) {
+    let out = "";
+    for(var ind = 0; ind < ch.length; ind++) {
+        char = ch.charCodeAt(ind);
+        if(char < 65 || char > 122) {
+            out += String.fromCharCode(char);
+            continue;
+        }
+        if(char <= 77 || (char > 90 && char <= 109)) {
+            out += String.fromCharCode(char + 13);
+        } else {
+            shifts = 13;
+            if(char > 77 && char < 96) {
+                shifts = (char + 13) - 90;
+                out += String.fromCharCode(shifts + 64);
+            } else {
+                shifts = (char + 13) - 121;
+                out += String.fromCharCode(shifts + 95);
+            }
+        }
+    }
+    return out;
 }
